@@ -1,0 +1,39 @@
+body {
+  background-color: #f8f9fa;
+  font-family: Arial, sans-serif;
+}
+
+.user-card {
+  max-width: 400px;   /* narrow card */
+  width: 100%;
+  margin-bottom: 20px; /* vertical spacing */
+  border-radius: 12px;
+  transition: transform 0.2s ease-in-out;
+}
+
+.user-card:hover {
+  transform: translateY(-5px);
+}
+
+.avatar-img {
+  width: 80px;          /* smaller avatar */
+  height: 80px;         /* smaller avatar */
+  object-fit: cover;
+  border-radius: 50%;
+  margin: 15px auto 10px; /* center horizontally and spacing */
+  display: block;
+}
+
+.card-body {
+  text-align: left;
+}
+
+.spinner-border {
+  display: block;
+  margin: 50px auto;
+}
+
+.alert {
+  text-align: center;
+  margin-top: 50px;
+}
