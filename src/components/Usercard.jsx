@@ -18,7 +18,7 @@ function UserCard({ user, onEdit, onLike, onDelete }) {
   return (
     <Card
       hoverable
-      cover={<Avatar src={avatarUrl} size={100} style={{ margin: "20px auto" }} />}
+      cover={<Avatar src={avatarUrl} size={250} style={{ margin: "20px auto" }} />}
       actions={[
         user.liked ? (
           <Button
