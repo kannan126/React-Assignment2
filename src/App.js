@@ -1,30 +1,77 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import UserList from './components/Userlist';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import { Row, Col, Spin, message } from "antd";
+import UserCard from "./components/Usercard";
+import EditUserModal from "./components/EditUserModel";
 
 function App() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [editingUser, setEditingUser] = useState(null);
 
   useEffect(() => {
-    axios.get('https://jsonplaceholder.typicode.com/users')
-      .then(response => {
-        setUsers(response.data);
+    fetch("https://jsonplaceholder.typicode.com/users")
+      .then((res) => res.json())
+      .then((data) => {
+        // add a liked flag to each user
+        setUsers(data.map((u) => ({ ...u, liked: false })));
         setLoading(false);
       })
-      .catch(err => {
-        setError('Failed to fetch users');
-        setLoading(false);
-      });
+      .catch(() => setLoading(false));
   }, []);
 
+  const handleSave = (updatedUser) => {
+    setUsers((prev) =>
+      prev.map((u) =>
+        u.id === editingUser.id ? { ...u, ...updatedUser } : u
+      )
+    );
+    message.success("User updated successfully!");
+  };
+
+  const handleLike = (id) => {
+    setUsers((prev) =>
+      prev.map((u) =>
+        u.id === id ? { ...u, liked: !u.liked } : u
+      )
+    );
+  };
+
+  const handleDelete = (id) => {
+    setUsers((prev) => prev.filter((u) => u.id !== id));
+    message.success("User deleted!");
+  };
+
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <Spin size="large" tip="Loading users..." />
+      </div>
+    );
+  }
+
   return (
-    <div className="container mt-4">  
-      {loading && <div className="spinner-border text-primary" role="status"><span className="visually-hidden">Loading...</span></div>}
-      {error && <div className="alert alert-danger">{error}</div>}
-      {!loading && !error && <UserList users={users} />}
+    <div style={{ padding: "20px" }}>
+      <Row gutter={[16, 16]}>
+        {users.map((user) => (
+          <Col xs={24} sm={12} md={8} lg={6} key={user.id}>
+            <UserCard
+              user={user}
+              onEdit={() => setEditingUser(user)}
+              onLike={() => handleLike(user.id)}
+              onDelete={() => handleDelete(user.id)}
+            />
+          </Col>
+        ))}
+      </Row>
+
+      {editingUser && (
+        <EditUserModal
+          visible={!!editingUser}
+          user={editingUser}
+          onClose={() => setEditingUser(null)}
+          onSave={handleSave}
+        />
+      )}
     </div>
   );
 }
