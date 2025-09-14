@@ -1,12 +1,16 @@
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  background-color: #f0f2f5;
+  background-color: #f8f9fa;
 }
 
-.loading-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+.card {
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+.user-details h4 {
+  margin-bottom: 10px;
+}
+
+.user-details p {
+  margin: 0;
 }

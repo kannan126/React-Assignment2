@@ -1,66 +1,29 @@
 import React from "react";
-import { Card, Avatar, Button } from "antd";
-import {
-  EditOutlined,
-  MailOutlined,
-  PhoneOutlined,
-  GlobalOutlined,
-  HomeOutlined,
-  BankOutlined,
-  HeartOutlined,
-  HeartFilled,
-  DeleteOutlined,
-} from "@ant-design/icons";
 
-function UserCard({ user, onEdit, onLike, onDelete }) {
-  const avatarUrl = `https://avatars.dicebear.com/v2/avataaars/${user.username}.svg?options[mood][]=happy`;
+function UserCard({ user }) {
+  const placeholderAvatar = `https://avatars.dicebear.com/v2/avataaars/${user.username}.svg?options[mood][]=happy`;
 
   return (
-    <Card
-      hoverable
-      cover={<Avatar src={avatarUrl} size={250} style={{ margin: "20px auto" }} />}
-      actions={[
-        user.liked ? (
-          <Button
-            type="text"
-            icon={<HeartFilled style={{ color: "red" }} />}
-            onClick={onLike}
-          >
-            Liked
-          </Button>
-        ) : (
-          <Button
-            type="text"
-            icon={<HeartOutlined />}
-            onClick={onLike}
-          >
-            Like
-          </Button>
-        ),
-        <Button
-          type="primary"
-          icon={<EditOutlined />}
-          onClick={onEdit}
-        >
-          Edit
-        </Button>,
-        <Button
-          danger
-          type="text"
-          icon={<DeleteOutlined />}
-          onClick={onDelete}
-        >
-          Delete
-        </Button>,
-      ]}
-    >
-      <h3>{user.name}</h3>
-      <p><MailOutlined /> {user.email}</p>
-      <p><PhoneOutlined /> {user.phone}</p>
-      <p><GlobalOutlined /> {user.website}</p>
-      <p><HomeOutlined /> {user.address.street}, {user.address.city}</p>
-      <p><BankOutlined /> {user.company.name}</p>
-    </Card>
+    <div className="card shadow-sm p-3 d-flex flex-row align-items-center">
+      <div className="avatar me-3">
+        <img
+          src={placeholderAvatar}
+          alt={user.name}
+          className="img-fluid"
+          style={{ width: "150px", height: "150px" }}
+        />
+        <div className="text-center mt-1 text-danger" style={{ fontSize: "12px" }}>
+        </div>
+      </div>
+      <div className="user-details">
+        <h4>{user.name}</h4>
+        <p><strong>Email:</strong> {user.email}</p>
+        <p><strong>Phone:</strong> {user.phone}</p>
+        <p><strong>Company:</strong> {user.company.name}</p>
+        <p><strong>Website:</strong> {user.website}</p>
+        <p><strong>Address:</strong> {user.address.street}, {user.address.suite}, {user.address.city}, {user.address.zipcode}</p>
+      </div>
+    </div>
   );
 }
 
