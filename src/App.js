@@ -1,33 +1,77 @@
-import React, { useState, useEffect } from "react";
-import UserList from "./components/UserList";
-import "./App.css";
+import React, { useEffect, useState } from "react";
+import { Row, Col, Spin, message } from "antd";
+import UserCard from "./components/Usercard";
+import EditUserModal from "./components/EditUserModal";
 
 function App() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [editingUser, setEditingUser] = useState(null);
 
   useEffect(() => {
     fetch("https://jsonplaceholder.typicode.com/users")
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to fetch users");
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
-        setUsers(data);
+        // add a liked flag to each user
+        setUsers(data.map((u) => ({ ...u, liked: false })));
         setLoading(false);
       })
-      .catch((err) => {
-        setError(err.message);
-        setLoading(false);
-      });
+      .catch(() => setLoading(false));
   }, []);
 
+  const handleSave = (updatedUser) => {
+    setUsers((prev) =>
+      prev.map((u) =>
+        u.id === editingUser.id ? { ...u, ...updatedUser } : u
+      )
+    );
+    message.success("User updated successfully!");
+  };
+
+  const handleLike = (id) => {
+    setUsers((prev) =>
+      prev.map((u) =>
+        u.id === id ? { ...u, liked: !u.liked } : u
+      )
+    );
+  };
+
+  const handleDelete = (id) => {
+    setUsers((prev) => prev.filter((u) => u.id !== id));
+    message.success("User deleted!");
+  };
+
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <Spin size="large" tip="Loading users..." />
+      </div>
+    );
+  }
+
   return (
-    <div className="container mt-4">
-      {loading && <p className="text-center">Loading users...</p>}
-      {error && <p className="text-danger text-center">{error}</p>}
-      {!loading && !error && <UserList users={users} />}
+    <div style={{ padding: "20px" }}>
+      <Row gutter={[16, 16]}>
+        {users.map((user) => (
+          <Col xs={24} sm={12} md={8} lg={6} key={user.id}>
+            <UserCard
+              user={user}
+              onEdit={() => setEditingUser(user)}
+              onLike={() => handleLike(user.id)}
+              onDelete={() => handleDelete(user.id)}
+            />
+          </Col>
+        ))}
+      </Row>
+
+      {editingUser && (
+        <EditUserModal
+          visible={!!editingUser}
+          user={editingUser}
+          onClose={() => setEditingUser(null)}
+          onSave={handleSave}
+        />
+      )}
     </div>
   );
 }
